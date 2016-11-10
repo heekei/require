@@ -1,5 +1,6 @@
 /**
  * require
+ * @version 0.1.1
  * 
  * @description 异步加载外部js,可回调
  * @param {Object} setting 配置项
