@@ -1,7 +1,7 @@
 /**
  * require
  * 
- * @version 0.1.2
+ * @version 0.2.0
  * 
  * @description 异步加载外部js,可回调
  * @param {Object} setting 配置项
@@ -10,30 +10,39 @@
  * @param {Function=} setting.callback 回调函数，可选
  * @param {Boolean=} setting.defer  是否在DomContentLoaded之前运行，默认为false（注：如果depends具有强依赖性，请将defer设置为true）
  */
-function require(setting) {
-    require.Timer = null;
+var require = function (setting) {
     var _this = this;
     if (require.loaded.indexOf(setting.url) !== -1) return;
+    require[setting.url] = {};
+    require[setting.url].Timer = null;
     // 加载依赖文件
     if (setting.depends) {
-        require.dependsLoading = true;
-        require.dLen = setting.depends.length;
-        require.loadingDepends = setting.depends;//添加正在加载的依赖
-        require.Timer = setInterval(function () {
-            if (require.dependsLoading === false) {
+        require[setting.url].dependsLoading = true;
+        
+        for(var x in setting.depends){
+            if(require.loaded.indexOf(setting.depends[x]) !== -1){
+                setting.depends.splice(x,1)
+            }
+        }
+        console.log(setting.depends)
+        require[setting.url].loadingDepends = setting.depends;//添加正在加载的依赖
+        require[setting.url].dLen = setting.depends.length;
+        require[setting.url].Timer = setInterval(function () {
+            if (require[setting.url].dependsLoading === false) {
                 require({ url: setting.url, callback: setting.callback })
-                clearInterval(require.Timer)
+                clearInterval(require[setting.url].Timer)
             }
         }, 0)
-        for (var d = 0; d < require.dLen; d++) {
+        for (var d = 0; d < require[setting.url].dLen; d++) {
             require({
                 url: setting.depends[d],
                 callback: function () {
-                    require.loadingDepends.splice(require.loadingDepends.indexOf(this.url), 1)
-                    if (require.loadingDepends.length == 0)
-                    { require.dependsLoading = false; }
+                    require[setting.url].loadingDepends.splice(require[setting.url].loadingDepends.indexOf(this.url), 1)
+                    if (require[setting.url].loadingDepends.length == 0)
+                    { require[setting.url].dependsLoading = false; }
                 }
             })
+
         }
         return;
     }
@@ -64,5 +73,4 @@ function require(setting) {
     require.loaded.push(setting.url);
     document.head.appendChild(script);
 }
-
 require.loaded = []
