@@ -24,7 +24,6 @@ var require = function (setting) {
                 setting.depends.splice(x,1)
             }
         }
-        console.log(setting.depends)
         require[setting.url].loadingDepends = setting.depends;//添加正在加载的依赖
         require[setting.url].dLen = setting.depends.length;
         require[setting.url].Timer = setInterval(function () {
