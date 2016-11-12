@@ -1,6 +1,6 @@
 /**
  * require
- * 
+ * @author Heekei
  * @version 0.2.0
  * 
  * @description 异步加载外部js,可回调
