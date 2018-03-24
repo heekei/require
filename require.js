@@ -1,7 +1,7 @@
 /**
  * require
  * @author Heekei
- * @version 0.2.0
+ * @version 0.2.1
  * 
  * @description 异步加载外部js,可回调
  * @param {Object} setting 配置项
